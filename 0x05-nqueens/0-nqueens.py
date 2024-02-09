@@ -4,7 +4,6 @@
 
 import sys
 
-
 def generate_solutions(row, column):
     """
     solve a simple N x N matrix
@@ -18,7 +17,6 @@ def generate_solutions(row, column):
     for queen in range(row):
         solution = place_queen(queen, column, solution)
     return solution
-
 
 def place_queen(queen, column, prev_solution):
     """
@@ -37,7 +35,6 @@ def place_queen(queen, column, prev_solution):
                 safe_position.append(array + [x])
     return safe_position
 
-
 def is_safe(q, x, array):
     """
     check if it's safe to make a move
@@ -49,11 +46,10 @@ def is_safe(q, x, array):
         returns a boolean
     """
     if x in array:
-        return (False)
+        return False
     else:
         return all(abs(array[column] - x) != q - column
-                   for column in range(q))
-
+                   for column in range(len(array)))
 
 def init():
     """
@@ -64,18 +60,16 @@ def init():
         returns an integer
     """
     if len(sys.argv) != 2:
-        print("Usage: nqueens N")
+        print("Usage: nqueens.py N")
         sys.exit(1)
-    if sys.argv[1].isdigit():
-        n = int(sys.argv[1])
-    else:
+    if not sys.argv[1].isdigit():
         print("N must be a number")
         sys.exit(1)
+    n = int(sys.argv[1])
     if n < 4:
         print("N must be at least 4")
         sys.exit(1)
-    return (n)
-
+    return n
 
 def n_queens():
     """
@@ -94,7 +88,6 @@ def n_queens():
         for q, x in enumerate(array):
             clean.append([q, x])
         print(clean)
-
 
 if __name__ == '__main__':
     n_queens()
