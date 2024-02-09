@@ -1,41 +1,100 @@
-#!/usr/bin/env python3
-""" The N queens puzzle is the challenge of placing N non-attacking queens on
-    an N×N chessboard. Write a program that solves the N queens problem.
-    Usage: nqueens N
-        If the user called the program with the wrong number of arguments,
-        print Usage: nqueens N, followed by a new line,
-        and exit with the status 1
-    where N must be an integer greater or equal to 4
-        If N is not an integer, print N must be a number,
-        followed by a new line, and exit with the status 1
-        If N is smaller than 4, print N must be at least 4,
-        followed by a new line, and exit with the status 1
-    The program should print every possible solution to the problem
-        One solution per line
-        You don’t have to print the solutions in a specific order
-    You are only allowed to import the sys module """
+#!/usr/bin/python3
+"""N Queens placement on NxN chessboard"""
+
+
 import sys
 
 
-def nqueens(n: int):
+def generate_solutions(row, column):
     """
-    backtracking
+    solve a simple N x N matrix
+    Args:
+        row (int): Number of rows
+        column (int): Number of columns
+    Returns:
+        returns a list of lists
     """
-    matrix = [[0 for x in range(n)] for y in range(n)]
-    print(str(matrix))
+    solution = [[]]
+    for queen in range(row):
+        solution = place_queen(queen, column, solution)
+    return solution
 
 
-if __name__ == "__main__":
-    if len(sys.argv) > 2 or len(sys.argv) < 2:
+def place_queen(queen, column, prev_solution):
+    """
+    Place the queen at a certain position
+    Args:
+        queen (int): The queen
+        column (int): The column to move
+        prev_solution (list): the previous move
+    Returns:
+        returns a list
+    """
+    safe_position = []
+    for array in prev_solution:
+        for x in range(column):
+            if is_safe(queen, x, array):
+                safe_position.append(array + [x])
+    return safe_position
+
+
+def is_safe(q, x, array):
+    """
+    check if it's safe to make a move
+    Args:
+        q (int): row to move to
+        x (int): column to move to
+        array (array): the matrix
+    Returns:
+        returns a boolean
+    """
+    if x in array:
+        return (False)
+    else:
+        return all(abs(array[column] - x) != q - column
+                   for column in range(q))
+
+
+def init():
+    """
+    Lets initialize the game shall we?
+    Args:
+        this function doesn't take any args
+    Returns:
+        returns an integer
+    """
+    if len(sys.argv) != 2:
         print("Usage: nqueens N")
-        exit(1)
-
-    if not sys.argv[1].isdigit():
+        sys.exit(1)
+    if sys.argv[1].isdigit():
+        n = int(sys.argv[1])
+    else:
         print("N must be a number")
-        exit(1)
-
-    if int(sys.argv[1]) < 4:
+        sys.exit(1)
+    if n < 4:
         print("N must be at least 4")
-        exit(1)
+        sys.exit(1)
+    return (n)
 
-    nqueens(int(sys.argv[1]))
+
+def n_queens():
+    """
+    The main entry point
+    Args:
+        can be called without passing args
+    Returns:
+        returns None
+    Example
+    -----------------------
+    """
+    n = init()
+    solutions = generate_solutions(n, n)
+    for array in solutions:
+        clean = []
+        for q, x in enumerate(array):
+            clean.append([q, x])
+        print(clean)
+
+
+if __name__ == '__main__':
+    n_queens()
